@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用） | Crux - 南十字星</title><meta name="description" content="从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用）"><meta name="keywords" content="入门,C++"><meta name="author" content="Crux"><meta name="copyright" content="Crux"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用）"><meta name="twitter:description" content="从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用）"><meta name="twitter:image" content="http://cruxssssss.github.io/img/16.jpg"><meta property="og:type" content="article"><meta property="og:title" content="从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用）"><meta property="og:url" content="http://cruxssssss.github.io/2020/06/21/cong7/"><meta property="og:site_name" content="Crux - 南十字星"><meta property="og:description" content="从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用）"><meta property="og:image" content="http://cruxssssss.github.io/img/16.jpg"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="canonical" href="http://cruxssssss.github.io/2020/06/21/cong7/"><link rel="prev" title="从8开始的C++世界生活（引用、new&amp;delete）" href="http://cruxssssss.github.io/2020/06/21/cong8/"><link rel="next" title="从6开始的C++世界生活（结构体）" href="http://cruxssssss.github.io/2020/06/19/cong6/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://cruxssssss.github.io/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: {"languages":{"author":"Author: Crux","link":"Link: http://cruxssssss.github.io/2020/06/21/cong7/","source":"Source: Crux - 南十字星","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Press","message_next":"to bookmark this page"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"},
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Crux - 南十字星</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/ppap.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">17</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">5</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">4</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#枚举类型"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">枚举类型</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#概念"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">概念</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#声明"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">声明</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#和结构体类型结合"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">和结构体类型结合</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#typedef"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">typedef</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#VS编程实用技巧"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">VS编程实用技巧</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#C-保留关键字"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">C++保留关键字</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#注释"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">注释</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#一闪而过的黑窗口"><span class="toc_mobile_items-number">3.3.</span> <span class="toc_mobile_items-text">一闪而过的黑窗口</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#精简工程源码"><span class="toc_mobile_items-number">3.4.</span> <span class="toc_mobile_items-text">精简工程源码</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#一些操作"><span class="toc_mobile_items-number">3.5.</span> <span class="toc_mobile_items-text">一些操作</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#枚举类型"><span class="toc-number">1.</span> <span class="toc-text">枚举类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-number">1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#声明"><span class="toc-number">1.2.</span> <span class="toc-text">声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#和结构体类型结合"><span class="toc-number">1.3.</span> <span class="toc-text">和结构体类型结合</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#typedef"><span class="toc-number">2.</span> <span class="toc-text">typedef</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#VS编程实用技巧"><span class="toc-number">3.</span> <span class="toc-text">VS编程实用技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#C-保留关键字"><span class="toc-number">3.1.</span> <span class="toc-text">C++保留关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注释"><span class="toc-number">3.2.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一闪而过的黑窗口"><span class="toc-number">3.3.</span> <span class="toc-text">一闪而过的黑窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#精简工程源码"><span class="toc-number">3.4.</span> <span class="toc-text">精简工程源码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些操作"><span class="toc-number">3.5.</span> <span class="toc-text">一些操作</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(/img/16.jpg)"><div id="post-info"><div id="post-title"><div class="posttitle">从7开始的C++世界生活（枚举&amp;typedef&amp;VS实用）</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2020-06-21<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2020-06-21</time><span class="post-meta__separator">|</span><span><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/C/">C++</a></span><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><div class="note info">
+            <p>本篇是学习VC驿站的《实用C++》教程时的超简化（不太会的部分会写多一点）同步笔记，详细内容可参见VC驿站原帖</p>
+          </div>
+
+<div class="note warning">
+            <p>是在学校C++课程之外重新系统地学习一遍C++，所以很基础很基础的部分不会记录</p><p>代码块渲染有误，目前不知道怎么解决，#include后面的总是消失，所以#include统一写作包含，懂什么意思就行了</p><p>如果觉得网站字体太小，可以在右下方的按钮中点击+放大哦√（比如我就觉得这个网站的字体很小）</p>
+          </div>
+
+<div class="note success">
+            <p>希望对你和我都能有所帮助 : ）</p>
+          </div>
+
+<h1 id="枚举类型"><a href="#枚举类型" class="headerlink" title="枚举类型"></a>枚举类型</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>如果一个变量只能有几种可能的值，这样的变量可以定义成枚举类型。所谓的 “枚举” 是指可以将变量的值一一列举出来，变量的值只能在列举出来的值的范围内，其他的值对该变量没有意义，例如：星期几、人种颜色、性别、月份 等等。<strong>枚举类型也是一种自定义类型。</strong> </p>
+<h2 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h2><p>enum ESex<br>{<br>    ESex_Male, //男性<br>    ESex_FMale //女性<br>};</p>
+<p>以上就是定义了一个<strong>枚举类型</strong> ESex，大括号内部的ESex_Male、ESex_FMale 称为<strong>枚举元素或枚举常量</strong>。表示这个枚举类型可能的值。</p>
+<p>注意事项：</p>
+<ol>
+<li><p>枚举元素按常量处理，所以称作枚举常量。他们不是变量，所以不要对他们进行赋值。</p>
+</li>
+<li><p>枚举元素是常量，所以其也是有值的，他们的值是一个整数，按照元素声明时候的顺序从0开始依次进行+1操作，默认的值就是：0,1,2,3，…<br>例如，上面的ESex枚举类型中，ESex_Male 的值默认是0，ESex_FMale 的默认值是1，依此类推。</p>
+</li>
+<li><p>枚举元素有默认的值，但也可以在声明的时候指定值，例如：<br>enum EWeekDay<br>{</p>
+<pre><code>EWeekDay_1 = 3,
+EWeekDay_2 = 4,
+EWeekDay_3 = 5,
+EWeekDay_4,
+EWeekDay_5,
+EWeekDay_6,
+EWeekDay_7,</code></pre><p>};<br>其中从 EWeekDay_4 开始未赋值，所以按照他的上一个元素的值+1的规则进行默认赋值，也就是 EWeekDay_3 + 1 = 6。<br>注意事项：上面赋值的最好是依次增大，不然有可能会造成两个枚举元素是一样的值，例如：<br>enum EWeekDay<br>{</p>
+<pre><code>EWeekDay_1 = 3,
+EWeekDay_2 = 2,
+EWeekDay_3 = 1,
+EWeekDay_4,
+EWeekDay_5,
+EWeekDay_6,
+EWeekDay_7,</code></pre><p>};</p>
+</li>
+<li><p>枚举值可以用来进行跟整数一样的判断，比较，switch-case 等操作（也就是当成一个整型常量来使用）。</p>
+<p>例如：<br>int ab = 2;<br>if(EWeekDay_1 > ab )<br>{<br>  //…<br>}</p>
+<p>再比如比较常用的和switch-case一起用：</p>
+<p>EWeekDay day;</p>
+<p>switch (day) //小助手会自动帮你生成大括号里的内容</p>
+<p>{</p>
+<p>case EWeekDay_1:</p>
+<p>​    break;</p>
+<p>case EWeekDay_2:</p>
+<p>​    break;</p>
+<p>case EWeekDay_3:</p>
+<p>​    break;</p>
+<p>//…</p>
+<p>}</p>
+</li>
+<li><p>虽然枚举类型的变量可以看做是整形类型的变量，但是不能把普通的整数赋值给枚举类型变量，例如：</p>
+<p>EWeekDay day = 2;<br>这种是错误的，除非进行强制类型转换：</p>
+<p>EWeekDay day = (EWeekDay) 2;</p>
+<p>但是不建议。最好还是：<br>EWeekDay day = EWeekDay_2;</p>
+<p>这样也可以但是没有意义：</p>
+<p>EWeekDay day = (EWeekDay) 20;</p>
+</li>
+</ol>
+<h2 id="和结构体类型结合"><a href="#和结构体类型结合" class="headerlink" title="和结构体类型结合"></a>和结构体类型结合</h2><div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c++</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c++"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//eg.</span></span><br><span class="line"><span class="keyword">enum</span> ESex</span><br><span class="line">{</span><br><span class="line">    ESex_Male, <span class="comment">//男性</span></span><br><span class="line">    ESex_FMale <span class="comment">//女性</span></span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student</span></span></span><br><span class="line"><span class="class">{</span></span><br><span class="line">    <span class="built_in">string</span> name;</span><br><span class="line">    <span class="keyword">int</span> num;</span><br><span class="line">    ESex sex;</span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">};</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>{</span><br><span class="line">    Student stu;</span><br><span class="line">    stu.sex = ESex_Male;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure></div>
+
+<h1 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h1><p>除了可以用 struct 结构体，union 联合体，enum 枚举 等自定义类型以外，还可以使用 typedef 声明一个新的类型名字来代替已有的类型名。注意是新的类型名字，只是名字而已，不是一种全新的类型，只是改个名字而已。<br>例如，我们定义一个无符号的整型int变量可以这样来定义：unsigned int a = 5;<br>类型的名字比较长，unsigned int，而且以后所有定义无符号的整型int变量都得这么写，那么有没有简单的写法呢，typedef就派上用场了，咱们可以给 unsigned int 改个名字，例如：<br>typedef unsigned int uint;<br>uint a = 5;<br>所以，以后所有的 unsigned int 都可以改成 uint 了，同理，其他的类型也都可以使用 typedef 改名，例如：<br>typedef int myint;<br>typedef unsigned long ulong;<br>typedef Student StuT;<br>typedef EWeekDay EWDay;<br>以上，都是可以的哦！ </p>
+<h1 id="VS编程实用技巧"><a href="#VS编程实用技巧" class="headerlink" title="VS编程实用技巧"></a>VS编程实用技巧</h1><h2 id="C-保留关键字"><a href="#C-保留关键字" class="headerlink" title="C++保留关键字"></a>C++保留关键字</h2><p>不能用这些关键字来作为变量的名字等用途，否则编译报错。<br>详见：<a href="https://www.cctry.com/thread-289434-1-1.html" target="_blank" rel="noopener">https://www.cctry.com/thread-289434-1-1.html</a> </p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>右上方工具栏有用来注释和取消注释的两个按钮。</p>
+<p>单行注释：将光标定位到所在的行，选中不选中都可以。之后点击工具栏的注释图标即可；<br>多行注释：鼠标选中所要注释的行，之后点击工具栏的注释图标即可。 </p>
+<h2 id="一闪而过的黑窗口"><a href="#一闪而过的黑窗口" class="headerlink" title="一闪而过的黑窗口"></a>一闪而过的黑窗口</h2><p>程序正常执行完了之后就退出，是正常现象。VS2019的黑窗口默认不会一闪而过。</p>
+<p>很多C++小白用户前期第一次使用VC6.0或者VS2013进行调试的时候，一般都是按F5，之后程序启动起来，黑窗口一闪而过，连程序执行的结果什么的都没看到，类似这样的情况如何操作呢？</p>
+<ol>
+<li>getchar/cin 法：在结尾加一句getchar()/cin >> a; 按任何字母数字等东西后退出</li>
+<li>断点法：设个断点</li>
+<li>Ctrl+F5 法（开始执行执行（不调试），编译器帮我们停住）</li>
+<li>工具栏添加快捷按钮点击法：菜单栏最右边的▼（工具栏选项）-> 添加或移除按钮 -> 自定义 -> 添加命令 -> 调试选项中找到第3点的开始执行（不调试）-> 点击确定，添加到菜单栏 -> 通过上移下移删除等按钮布置其在菜单栏的位置。</li>
+</ol>
+<h2 id="精简工程源码"><a href="#精简工程源码" class="headerlink" title="精简工程源码"></a>精简工程源码</h2><ol>
+<li><p>工程目录下的Debug/Release文件夹都可以删除，包括两层目录结构（Debug/Release文件各两个，总共4个文件）</p>
+</li>
+<li><p>工程目录下的：SolutionName.sdf、ipch文件夹 以及 *.pch 等文件都可以直接删除，大大减少体积；<br>备注：VC6.0的话有个 *.ncb 文件也可以删除。</p>
+<p>如果不想让VS在工程目录中生成这些的文件，可以按照如下设置：<br>工具(T)->选项(O)…->文本编辑器->C/C++->高级->正在浏览数据库回退（VS2019）/回退位置（VS2013）：<br>始终使用回退位置->True<br>回退位置已在使用时，不警告->True<br>回退位置->留空</p>
+<p>经过以上设置之后，VS会把 sdf、pch 等相关文件生成在系统的临时目录中，从而不生成在工程目录中，所以以后打包的时候就方便了，不用每次都清理。 </p>
+</li>
+</ol>
+<h2 id="一些操作"><a href="#一些操作" class="headerlink" title="一些操作"></a>一些操作</h2><p>运行程序：Ctrl + F5 或调试 >“开始执行(不调试)”菜单<br>调试程序：F5 或调试 >“开始调试”菜单<br>停止调试：shift + F5<br>设置断点：将光标定位到所在的行，F9<br>调试时，选中变量拖至监视窗口，可查看详细信息；变量前加&可以看地址在哪</p>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Crux</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cruxssssss.github.io/2020/06/21/cong7/">http://cruxssssss.github.io/2020/06/21/cong7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%85%A5%E9%97%A8/">入门    </a><a class="post-meta__tags" href="/tags/C/">C++    </a></div><div class="post_share"><div class="social-share" data-image="/img/16.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2020/06/21/cong8/"><img class="prev_cover lazyload" data-src="/img/18.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Previous Post</div><div class="prev_info"><span>从8开始的C++世界生活（引用、new&amp;delete）</span></div></a></div><div class="next-post pull_right"><a href="/2020/06/19/cong6/"><img class="next_cover lazyload" data-src="/img/15.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>从6开始的C++世界生活（结构体）</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/05/24/cong0/" title="从0开始的C++世界生活（从环境搭建到基本语法）"><img class="relatedPosts_cover lazyload"data-src="/img/4.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-24</div><div class="relatedPosts_title">从0开始的C++世界生活（从环境搭建到基本语法）</div></div></a></div><div class="relatedPosts_item"><a href="/2020/05/26/cong1/" title="从1开始的C++世界生活"><img class="relatedPosts_cover lazyload"data-src="/img/8.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-05-26</div><div class="relatedPosts_title">从1开始的C++世界生活</div></div></a></div><div class="relatedPosts_item"><a href="/2020/06/06/cong4/" title="从4开始的C++世界生活（字符数组&字符串处理函数）"><img class="relatedPosts_cover lazyload"data-src="/img/12.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-06</div><div class="relatedPosts_title">从4开始的C++世界生活（字符数组&字符串处理函数）</div></div></a></div><div class="relatedPosts_item"><a href="/2020/06/19/cong5/" title="从5开始的C++世界生活（指针、数组指针）"><img class="relatedPosts_cover lazyload"data-src="/img/13.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-19</div><div class="relatedPosts_title">从5开始的C++世界生活（指针、数组指针）</div></div></a></div><div class="relatedPosts_item"><a href="/2020/06/05/cong3/" title="从3开始的C++世界生活（函数&局部/全局变量&数组简介）"><img class="relatedPosts_cover lazyload"data-src="/img/11.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-05</div><div class="relatedPosts_title">从3开始的C++世界生活（函数&局部/全局变量&数组简介）</div></div></a></div><div class="relatedPosts_item"><a href="/2020/06/01/cong2/" title="从2开始的C++世界生活（选择&循环语句）"><img class="relatedPosts_cover lazyload"data-src="/img/6.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-01</div><div class="relatedPosts_title">从2开始的C++世界生活（选择&循环语句）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Crux</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my blog!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">简</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
