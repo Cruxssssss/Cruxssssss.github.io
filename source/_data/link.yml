@@ -1,0 +1,22 @@
+class:
+  class_name: 友情链接
+  link_list:
+    1:
+      name: noname
+      link: https://www.noname0519.com/
+      avatar: /img/noname.jpg
+      descr: 是厉害的可爱小王子！
+    2:
+      name: Sophia
+      link: https://sophia-ann.github.io/
+      avatar: /img/1.jpg
+      descr: 搞AI和pwn的小姐姐！
+
+class2:
+  class_name: 链接无效
+  link_list:
+    1:
+      name: 
+      link: 
+      avatar: 
+      descr: 
