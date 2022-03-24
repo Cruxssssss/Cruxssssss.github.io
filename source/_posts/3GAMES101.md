@@ -6,6 +6,7 @@ tags:
  - 入门
 categories: 
  - 图形学
+ - GAMES101
 cover: /img/21.jpg
 ---
 
