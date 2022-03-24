@@ -1,0 +1,382 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap） | Crux - 南十字星</title><meta name="description" content="从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap）"><meta name="keywords" content="图形学,入门"><meta name="author" content="Crux"><meta name="copyright" content="Crux"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap）"><meta name="twitter:description" content="从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap）"><meta name="twitter:image" content="http://cruxssssss.github.io/img/26.jpg"><meta property="og:type" content="article"><meta property="og:title" content="从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap）"><meta property="og:url" content="http://cruxssssss.github.io/2022/03/17/6GAMES101/"><meta property="og:site_name" content="Crux - 南十字星"><meta property="og:description" content="从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap）"><meta property="og:image" content="http://cruxssssss.github.io/img/26.jpg"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = 'false'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="canonical" href="http://cruxssssss.github.io/2022/03/17/6GAMES101/"><link rel="next" title="从5开始的图形学入门生活（Blinn-Phong reflectance model &amp; Shading Frequencies &amp; Graphics Pipeline）" href="http://cruxssssss.github.io/2022/03/16/5GAMES101/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://cruxssssss.github.io/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: true,
+  copyright: {"languages":{"author":"Author: Crux","link":"Link: http://cruxssssss.github.io/2022/03/17/6GAMES101/","source":"Source: Crux - 南十字星","info":"Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source."}},
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: {"bookmark":{"title":"Snackbar.bookmark.title","message_prev":"Press","message_next":"to bookmark this page"},"chs_to_cht":"Traditional Chinese Activated Manually","cht_to_chs":"Simplified Chinese Activated Manually","day_to_night":"Light Mode Activated Manually","night_to_day":"Dark Mode Activated Manually","bgLight":"#49b1f5","bgDark":"#2d3035","position":"bottom-left"},
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script><meta name="generator" content="Hexo 4.2.0"></head><body><canvas class="fireworks"></canvas><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Crux - 南十字星</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/ppap.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">Articles</div><div class="length_num">20</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">Tags</div><div class="length_num">8</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">Categories</div><div class="length_num">6</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a></div><div class="menus_item"><a class="site-page"><i class="fa-fw fa fa-list" aria-hidden="true"></i><span> List</span><i class="fa fa-chevron-down menus-expand" aria-hidden="true"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/music/"><i class="fa-fw fa fa-music"></i><span> Music</span></a></li><li><a class="site-page" href="/movies/"><i class="fa-fw fa fa-film"></i><span> Movie</span></a></li></ul></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">Catalog</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Texture-Mapping"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">Texture Mapping</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Texture-Coordinates"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">Texture Coordinates</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#无缝贴图"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">无缝贴图</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#着色和材质？"><span class="toc_mobile_items-number">1.3.</span> <span class="toc_mobile_items-text">着色和材质？</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Interpolation-Across-Triangles-Barycentric-Coordinates"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">Interpolation Across Triangles: Barycentric Coordinates</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Interpolation-Across-Triangles"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">Interpolation Across Triangles</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Barycentric-coordinates"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">Barycentric coordinates</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#定义"><span class="toc_mobile_items-number">2.2.1.</span> <span class="toc_mobile_items-text">定义</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#如何计算重心坐标"><span class="toc_mobile_items-number">2.2.2.</span> <span class="toc_mobile_items-text">如何计算重心坐标</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Appliance"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">Appliance</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Applying-Textures"><span class="toc_mobile_items-number">3.</span> <span class="toc_mobile_items-text">Applying Textures</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Simple-Texture-Mapping-Diffuse-Color"><span class="toc_mobile_items-number">3.1.</span> <span class="toc_mobile_items-text">Simple Texture Mapping: Diffuse Color</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Problems"><span class="toc_mobile_items-number">3.2.</span> <span class="toc_mobile_items-text">Problems</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Texture-Magnification-easy-case"><span class="toc_mobile_items-number">3.2.1.</span> <span class="toc_mobile_items-text">Texture Magnification(easy case)</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#Bilinear-Interpolation"><span class="toc_mobile_items-number">3.2.1.1.</span> <span class="toc_mobile_items-text">Bilinear Interpolation</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Texture-Minification-hard-case"><span class="toc_mobile_items-number">3.2.2.</span> <span class="toc_mobile_items-text">Texture Minification(hard case)</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#Supersampling？"><span class="toc_mobile_items-number">3.2.2.1.</span> <span class="toc_mobile_items-text">Supersampling？</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#Mipmap"><span class="toc_mobile_items-number">3.2.2.2.</span> <span class="toc_mobile_items-text">Mipmap</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#Trilinear-Interpolation"><span class="toc_mobile_items-number">3.2.2.2.1.</span> <span class="toc_mobile_items-text">Trilinear Interpolation</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-5"><a class="toc_mobile_items-link" href="#Limitations"><span class="toc_mobile_items-number">3.2.2.2.2.</span> <span class="toc_mobile_items-text">Limitations</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#Applications-of-Texture"><span class="toc_mobile_items-number">4.</span> <span class="toc_mobile_items-text">Applications of Texture</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Many-Uses"><span class="toc_mobile_items-number">4.1.</span> <span class="toc_mobile_items-text">Many Uses</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Environment-Map-环境光照"><span class="toc_mobile_items-number">4.2.</span> <span class="toc_mobile_items-text">Environment Map 环境光照</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Spherical-Environment-Map"><span class="toc_mobile_items-number">4.2.1.</span> <span class="toc_mobile_items-text">Spherical Environment Map</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#Problem"><span class="toc_mobile_items-number">4.2.1.1.</span> <span class="toc_mobile_items-text">Problem</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#Solution-Cube-Map"><span class="toc_mobile_items-number">4.2.1.2.</span> <span class="toc_mobile_items-text">Solution: Cube Map</span></a></li></ol></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Bump-normal-mapping-凹凸贴图-法线贴图"><span class="toc_mobile_items-number">4.3.</span> <span class="toc_mobile_items-text">Bump &#x2F; normal mapping 凹凸贴图&#x2F;法线贴图</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#是什么"><span class="toc_mobile_items-number">4.3.1.</span> <span class="toc_mobile_items-text">是什么</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#具体操作"><span class="toc_mobile_items-number">4.3.2.</span> <span class="toc_mobile_items-text">具体操作</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#How-to-perturb-the-normal-in-flatland"><span class="toc_mobile_items-number">4.3.2.1.</span> <span class="toc_mobile_items-text">How to perturb the normal (in flatland)</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#How-to-perturb-the-normal-in-3D"><span class="toc_mobile_items-number">4.3.2.2.</span> <span class="toc_mobile_items-text">How to perturb the normal (in 3D)</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Displacement-mapping-位移贴图"><span class="toc_mobile_items-number">4.3.3.</span> <span class="toc_mobile_items-text">Displacement mapping 位移贴图</span></a></li></ol></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#Other-applications"><span class="toc_mobile_items-number">4.4.</span> <span class="toc_mobile_items-text">Other applications</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#3D-Procedural-Noise-Solid-modeling"><span class="toc_mobile_items-number">4.4.1.</span> <span class="toc_mobile_items-text">3D Procedural Noise + Solid modeling</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#Provide-Precomputed-Shading"><span class="toc_mobile_items-number">4.4.2.</span> <span class="toc_mobile_items-text">Provide Precomputed Shading</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-4"><a class="toc_mobile_items-link" href="#3D-Textures-and-Volume-Rendering"><span class="toc_mobile_items-number">4.4.2.1.</span> <span class="toc_mobile_items-text">3D Textures and Volume Rendering</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Texture-Mapping"><span class="toc-number">1.</span> <span class="toc-text">Texture Mapping</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Texture-Coordinates"><span class="toc-number">1.1.</span> <span class="toc-text">Texture Coordinates</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#无缝贴图"><span class="toc-number">1.2.</span> <span class="toc-text">无缝贴图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#着色和材质？"><span class="toc-number">1.3.</span> <span class="toc-text">着色和材质？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Interpolation-Across-Triangles-Barycentric-Coordinates"><span class="toc-number">2.</span> <span class="toc-text">Interpolation Across Triangles: Barycentric Coordinates</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Interpolation-Across-Triangles"><span class="toc-number">2.1.</span> <span class="toc-text">Interpolation Across Triangles</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Barycentric-coordinates"><span class="toc-number">2.2.</span> <span class="toc-text">Barycentric coordinates</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#定义"><span class="toc-number">2.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何计算重心坐标"><span class="toc-number">2.2.2.</span> <span class="toc-text">如何计算重心坐标</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Appliance"><span class="toc-number">2.3.</span> <span class="toc-text">Appliance</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Applying-Textures"><span class="toc-number">3.</span> <span class="toc-text">Applying Textures</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Simple-Texture-Mapping-Diffuse-Color"><span class="toc-number">3.1.</span> <span class="toc-text">Simple Texture Mapping: Diffuse Color</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Problems"><span class="toc-number">3.2.</span> <span class="toc-text">Problems</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Texture-Magnification-easy-case"><span class="toc-number">3.2.1.</span> <span class="toc-text">Texture Magnification(easy case)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Bilinear-Interpolation"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">Bilinear Interpolation</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Texture-Minification-hard-case"><span class="toc-number">3.2.2.</span> <span class="toc-text">Texture Minification(hard case)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Supersampling？"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">Supersampling？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mipmap"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">Mipmap</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Trilinear-Interpolation"><span class="toc-number">3.2.2.2.1.</span> <span class="toc-text">Trilinear Interpolation</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Limitations"><span class="toc-number">3.2.2.2.2.</span> <span class="toc-text">Limitations</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Applications-of-Texture"><span class="toc-number">4.</span> <span class="toc-text">Applications of Texture</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Many-Uses"><span class="toc-number">4.1.</span> <span class="toc-text">Many Uses</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Environment-Map-环境光照"><span class="toc-number">4.2.</span> <span class="toc-text">Environment Map 环境光照</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spherical-Environment-Map"><span class="toc-number">4.2.1.</span> <span class="toc-text">Spherical Environment Map</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Problem"><span class="toc-number">4.2.1.1.</span> <span class="toc-text">Problem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Solution-Cube-Map"><span class="toc-number">4.2.1.2.</span> <span class="toc-text">Solution: Cube Map</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bump-normal-mapping-凹凸贴图-法线贴图"><span class="toc-number">4.3.</span> <span class="toc-text">Bump &#x2F; normal mapping 凹凸贴图&#x2F;法线贴图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#是什么"><span class="toc-number">4.3.1.</span> <span class="toc-text">是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#具体操作"><span class="toc-number">4.3.2.</span> <span class="toc-text">具体操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#How-to-perturb-the-normal-in-flatland"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">How to perturb the normal (in flatland)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#How-to-perturb-the-normal-in-3D"><span class="toc-number">4.3.2.2.</span> <span class="toc-text">How to perturb the normal (in 3D)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Displacement-mapping-位移贴图"><span class="toc-number">4.3.3.</span> <span class="toc-text">Displacement mapping 位移贴图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Other-applications"><span class="toc-number">4.4.</span> <span class="toc-text">Other applications</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3D-Procedural-Noise-Solid-modeling"><span class="toc-number">4.4.1.</span> <span class="toc-text">3D Procedural Noise + Solid modeling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Provide-Precomputed-Shading"><span class="toc-number">4.4.2.</span> <span class="toc-text">Provide Precomputed Shading</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3D-Textures-and-Volume-Rendering"><span class="toc-number">4.4.2.1.</span> <span class="toc-text">3D Textures and Volume Rendering</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(/img/26.jpg)"><div id="post-info"><div id="post-title"><div class="posttitle">从6开始的图形学入门生活（Texture Mapping &amp; Barycentric coordinates &amp; Mipmap）</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> Created 2022-03-17<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> Updated 2022-03-24</time><span class="post-meta__separator">|</span><span><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学</a><i class="fa fa-angle-right fa-fw" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%9B%BE%E5%BD%A2%E5%AD%A6/GAMES101/">GAMES101</a></span><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>Post View:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><html><head></head><body><h1 id="Texture-Mapping"><a href="#Texture-Mapping" class="headerlink" title="Texture Mapping"></a>Texture Mapping</h1><ul>
+<li><p>需求：定义物体上任何一点的不同属性</p>
+</li>
+<li><p>Surface lives in 3D world space</p>
+<p>Every 3D surface point also has a place where it goes in the 2D image (texture). </p>
+<p><a href="/2022/03/17/6GAMES101/1647441388555.png" data-fancybox="group" data-caption="1647441388555" class="fancybox"><img alt="1647441388555" title="1647441388555" data-src="/2022/03/17/6GAMES101/1647441388555.png" class="lazyload"></a></p>
+<p>纹理 -> 一张图</p>
+<p>纹理映射 -> 把纹理图蒙在三维物体的表面，形成一一对应的关系</p>
+</li>
+<li><p>怎样能把空间中的三角形映射到纹理上？-> 这点我们不关心，默认已知</p>
+<ol>
+<li>艺术家创造（ 在美术建模的时候，就由建模软件制定好了关系，我们就当做我们能够知道模型表面上任意一点在纹理的哪个位置即可 ）</li>
+<li>自动化（重大研究方向：参数化）</li>
+</ol>
+</li>
+</ul>
+<h2 id="Texture-Coordinates"><a href="#Texture-Coordinates" class="headerlink" title="Texture Coordinates"></a>Texture Coordinates</h2><p><a href="/2022/03/17/6GAMES101/1647441894492.png" data-fancybox="group" data-caption="1647441894492" class="fancybox"><img alt="1647441894492" title="1647441894492" data-src="/2022/03/17/6GAMES101/1647441894492.png" class="lazyload"></a></p>
+<ul>
+<li>规定u、v∈[0, 1]，方便处理</li>
+<li>三角形三个顶点，每一个顶点对应一个(u, v)，之后可以通过重心坐标计算出三角形内任意一点所对应的(u, v)</li>
+</ul>
+<h2 id="无缝贴图"><a href="#无缝贴图" class="headerlink" title="无缝贴图"></a>无缝贴图</h2><ul>
+<li><p>可以像贴瓷砖一样贴纹理</p>
+<p><a href="/2022/03/17/6GAMES101/1647442246398.png" data-fancybox="group" data-caption="1647442246398" class="fancybox"><img alt="1647442246398" title="1647442246398" data-src="/2022/03/17/6GAMES101/1647442246398.png" class="lazyload"></a></p>
+</li>
+<li><p>如何制作上下左右无缝衔接的贴图？</p>
+<p>算法：Wang Tiles（王氏砖）</p>
+</li>
+</ul>
+<h2 id="着色和材质？"><a href="#着色和材质？" class="headerlink" title="着色和材质？"></a>着色和材质？</h2><p>老师说 着色 = 材质，让我些许迷惑</p>
+<p>查找到了unity官方文档解释如下：</p>
+<blockquote>
+<p>在给定的着色器中有许多属性，可由<strong>使用该着色器的材质</strong>为它们赋值。这些属性可以是数字、颜色定义或纹理，在查看材质时会显示在检视面板中。然后，附加到游戏对象的渲染器组件将使用材质来渲染每个游戏对象的网格。 </p>
+<p>更具体地说，着色器定义了：</p>
+<ul>
+<li>对象渲染方法。此方法包括代码和数学计算，其中可能包括光源的角度、视角以及任何其他相关计算。着色器还可根据最终用户的图形硬件指定不同的方法。</li>
+<li>可在材质检视面板中自定义的参数，例如纹理贴图、颜色和数值。</li>
+</ul>
+<p>材质定义了：</p>
+<ul>
+<li>用于渲染此材质的着色器。</li>
+<li>着色器参数（例如要使用的纹理贴图、颜色和数值）的具体值。</li>
+</ul>
+</blockquote>
+<p>确实是差不多的概念，严格来说，材质使用了着色器，确定着色器的参数。</p>
+<h1 id="Interpolation-Across-Triangles-Barycentric-Coordinates"><a href="#Interpolation-Across-Triangles-Barycentric-Coordinates" class="headerlink" title="Interpolation Across Triangles: Barycentric Coordinates"></a>Interpolation Across Triangles: Barycentric Coordinates</h1><blockquote>
+<p>三角形的三个顶点，有各自不同的属性，如何把这个属性在三角形内部做一个平滑的过渡？</p>
+</blockquote>
+<h2 id="Interpolation-Across-Triangles"><a href="#Interpolation-Across-Triangles" class="headerlink" title="Interpolation Across Triangles"></a>Interpolation Across Triangles</h2><p>Why do we want to interpolate? </p>
+<ul>
+<li>Specify values at vertices </li>
+<li>Obtain smoothly varying values across triangles </li>
+</ul>
+<p>What do we want to interpolate? </p>
+<ul>
+<li>Texture coordinates, colors, normal vectors, … </li>
+</ul>
+<p>How do we interpolate? </p>
+<ul>
+<li>Barycentric coordinates </li>
+</ul>
+<h2 id="Barycentric-coordinates"><a href="#Barycentric-coordinates" class="headerlink" title="Barycentric coordinates"></a>Barycentric coordinates</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p><a href="/2022/03/17/6GAMES101/1647507762357.png" data-fancybox="group" data-caption="1647507762357" class="fancybox"><img alt="1647507762357" title="1647507762357" data-src="/2022/03/17/6GAMES101/1647507762357.png" class="lazyload"></a></p>
+<ul>
+<li><p>α + β + λ = 1 ：点在三角形所在的平面内</p>
+<blockquote>
+<p>共面向量定理 推论1：</p>
+<p>设O、A、B、C是不共面的四点，则对空间任意一点P，都存在唯一的有序实数组 (x,y,z) 使得<strong>OP</strong>=x<strong>OA</strong>+y<strong>OB</strong>+z<strong>OC</strong> 说明：若x+y+z=1 则PABC四点共面</p>
+</blockquote>
+</li>
+<li><p>α, β, λ > 0 ：点在三角形内部</p>
+</li>
+</ul>
+<h3 id="如何计算重心坐标"><a href="#如何计算重心坐标" class="headerlink" title="如何计算重心坐标"></a>如何计算重心坐标</h3><ul>
+<li><p>已知点A、B、C、P的坐标，求 (α, β, λ) ，可列方程求解：</p>
+<p><a href="/2022/03/17/6GAMES101/1647508785146.png" data-fancybox="group" data-caption="1647508785146" class="fancybox"><img alt="1647508785146" title="1647508785146" data-src="/2022/03/17/6GAMES101/1647508785146.png" class="lazyload"></a></p>
+<blockquote>
+<p>具体推导过程：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/58199366" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/58199366</a></p>
+</blockquote>
+<p>可以得到：</p>
+<p><a href="/2022/03/17/6GAMES101/1647508832060.png" data-fancybox="group" data-caption="1647508832060" class="fancybox"><img alt="1647508832060" title="1647508832060" data-src="/2022/03/17/6GAMES101/1647508832060.png" class="lazyload"></a></p>
+</li>
+<li><p>所以有公式：顶点所对小三角形的面积占比</p>
+<p><a href="/2022/03/17/6GAMES101/1647508900796.png" data-fancybox="group" data-caption="1647508900796" class="fancybox"><img alt="1647508900796" title="1647508900796" data-src="/2022/03/17/6GAMES101/1647508900796.png" class="lazyload"></a></p>
+</li>
+<li><p>简化为叉乘公式的坐标结果，方便计算：</p>
+<p><a href="/2022/03/17/6GAMES101/1647509044876.png" data-fancybox="group" data-caption="1647509044876" class="fancybox"><img alt="1647509044876" title="1647509044876" data-src="/2022/03/17/6GAMES101/1647509044876.png" class="lazyload"></a></p>
+</li>
+</ul>
+<h2 id="Appliance"><a href="#Appliance" class="headerlink" title="Appliance"></a>Appliance</h2><p><a href="/2022/03/17/6GAMES101/1647509123582.png" data-fancybox="group" data-caption="1647509123582" class="fancybox"><img alt="1647509123582" title="1647509123582" data-src="/2022/03/17/6GAMES101/1647509123582.png" class="lazyload"></a></p>
+<div class="note warning">
+            <ul><li><p>重心坐标在<strong>投影后会发生改变</strong>， 比如3D时重心坐标可能是(0.5,0.2,0.3), 到了2D后就变成了(0.4,0.4,0.2) ，这样会导致插值结果产生比较大的偏差</p></li><li><p>所以如果要对<strong>三维空间中的属性</strong>进行插值，就要取<strong>三维空间中的顶点坐标</strong>，计算出<strong>重心坐标</strong>后，对该属性进行<strong>插值</strong>计算。</p><p>不能用投影之后的顶点坐标计算出重心坐标，然后做插值</p><p>eg. 深度插值时，需要计算出三维空间的重心坐标在三维空间中做插值，然后把插值结果对应到二维空间中去</p></li></ul>
+          </div>
+
+<h1 id="Applying-Textures"><a href="#Applying-Textures" class="headerlink" title="Applying Textures"></a>Applying Textures</h1><ul>
+<li>三角形顶点(u, v)   –插值–>  每个采样点的 (u, v)</li>
+</ul>
+<h2 id="Simple-Texture-Mapping-Diffuse-Color"><a href="#Simple-Texture-Mapping-Diffuse-Color" class="headerlink" title="Simple Texture Mapping: Diffuse Color"></a>Simple Texture Mapping: Diffuse Color</h2><p><a href="/2022/03/17/6GAMES101/1647511556583.png" data-fancybox="group" data-caption="1647511556583" class="fancybox"><img alt="1647511556583" title="1647511556583" data-src="/2022/03/17/6GAMES101/1647511556583.png" class="lazyload"></a></p>
+<h2 id="Problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h2><h3 id="Texture-Magnification-easy-case"><a href="#Texture-Magnification-easy-case" class="headerlink" title="Texture Magnification(easy case)"></a>Texture Magnification(easy case)</h3><ul>
+<li>Generally don’t want this — insufficient texture resolution</li>
+<li>A pixel on a texture — a <strong>texel</strong> (纹理元素、纹素) </li>
+</ul>
+<p>In this case, many pixels  –映射–>  1 texel</p>
+<p>一个纹素要对应多个像素，在实际渲染时产生的效果就是纹理被拉伸，视觉上会有模糊的感觉</p>
+<h4 id="Bilinear-Interpolation"><a href="#Bilinear-Interpolation" class="headerlink" title="Bilinear Interpolation"></a>Bilinear Interpolation</h4><p><a href="/2022/03/17/6GAMES101/1647511922530.png" data-fancybox="group" data-caption="1647511922530" class="fancybox"><img alt="1647511922530" title="1647511922530" data-src="/2022/03/17/6GAMES101/1647511922530.png" class="lazyload"></a></p>
+<p> Bilinear interpolation usually gives pretty good results at reasonable costs </p>
+<p><a href="/2022/03/17/6GAMES101/1647511875529.png" data-fancybox="group" data-caption="1647511875529" class="fancybox"><img alt="1647511875529" title="1647511875529" data-src="/2022/03/17/6GAMES101/1647511875529.png" class="lazyload"></a></p>
+<p>Bicubic：利用周围的16个点进行三次方的插值，可以得到更好的效果</p>
+<h3 id="Texture-Minification-hard-case"><a href="#Texture-Minification-hard-case" class="headerlink" title="Texture Minification(hard case)"></a>Texture Minification(hard case)</h3><p><a href="/2022/03/17/6GAMES101/1647512168464.png" data-fancybox="group" data-caption="1647512168464" class="fancybox"><img alt="1647512168464" title="1647512168464" data-src="/2022/03/17/6GAMES101/1647512168464.png" class="lazyload"></a></p>
+<ul>
+<li><p>因为透视投影的近大远小效果，在近处 多个屏幕像素对应到一个纹理像素，在远处 <strong>一个屏幕像素会对应到多个纹理像素，这就产生了摩尔纹</strong>。</p>
+</li>
+<li><p>屏幕上的像素覆盖纹理上的区域大小各不相同：</p>
+<p><a href="/2022/03/17/6GAMES101/1647515328921.png" data-fancybox="group" data-caption="1647515328921" class="fancybox"><img alt="1647515328921" title="1647515328921" data-src="/2022/03/17/6GAMES101/1647515328921.png" class="lazyload"></a></p>
+<ul>
+<li><p>用中心点的(u, v)坐标对应的值作为这一片区域的平均值，显然不对</p>
+</li>
+<li><p>一个像素内部纹理的变化频率很高（高频信号），用一个采样点采样肯定不行（低频采样）</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Supersampling？"><a href="#Supersampling？" class="headerlink" title="Supersampling？"></a>Supersampling？</h4><p><a href="/2022/03/17/6GAMES101/1647516388384.png" data-fancybox="group" data-caption="1647516388384" class="fancybox"><img alt="1647516388384" title="1647516388384" data-src="/2022/03/17/6GAMES101/1647516388384.png" class="lazyload"></a></p>
+<p>Will supersampling work? </p>
+<ul>
+<li>Yes, high quality, but costly </li>
+<li>When highly minified, many texels in pixel footprint</li>
+<li>Signal frequency too large in a pixel</li>
+<li>Need even higher sampling frequency </li>
+</ul>
+<p>Let’s understand this problem in another way</p>
+<ul>
+<li><p>What if we don’t sample?</p>
+</li>
+<li><p>Just need to get the average value within a range!  </p>
+<p>点查询 vs. 范围查询（且能查询任意不同大小的范围）</p>
+</li>
+</ul>
+<h4 id="Mipmap"><a href="#Mipmap" class="headerlink" title="Mipmap"></a>Mipmap</h4><p>Allowing (<strong>fast, approx., square</strong>) range queries </p>
+<p><a href="/2022/03/17/6GAMES101/1647516719574.png" data-fancybox="group" data-caption="1647516719574" class="fancybox"><img alt="1647516719574" title="1647516719574" data-src="/2022/03/17/6GAMES101/1647516719574.png" class="lazyload"></a></p>
+<ul>
+<li><p>总共有 log2(128) 层</p>
+</li>
+<li><p>占用存储空间：</p>
+<p>每一层的存储量是上一层的1/4，等比数列求和，可得存储量</p>
+<p>1 -> 1+1/3 = 4/3</p>
+</li>
+<li><p>假如一个屏幕像素覆盖了4个左右的纹理像素，即L=2，那么我们自然要使用第一层的mipmap，而要是覆盖了16个左右像素，L=4，就应该用第二层的。也就是说如果一个屏幕像素覆盖了L*L个纹理像素，那么就应该使用 D = log2L 层mipmap。</p>
+<p>一个像素覆盖的区域在D层会对应到1个像素</p>
+</li>
+<li><p>那么我们就要知道我们的一个屏幕像素到底覆盖了多少的纹理像素，也就是求L的值。</p>
+<p>近似地求出L的值如下（不太懂这个公式怎么求的）：</p>
+<p><a href="/2022/03/17/6GAMES101/1647518548132.png" data-fancybox="group" data-caption="1647518548132" class="fancybox"><img alt="1647518548132" title="1647518548132" data-src="/2022/03/17/6GAMES101/1647518548132.png" class="lazyload"></a></p>
+</li>
+</ul>
+<h5 id="Trilinear-Interpolation"><a href="#Trilinear-Interpolation" class="headerlink" title="Trilinear Interpolation"></a>Trilinear Interpolation</h5><p><a href="/2022/03/17/6GAMES101/1647519390703.png" data-fancybox="group" data-caption="1647519390703" class="fancybox"><img alt="1647519390703" title="1647519390703" data-src="/2022/03/17/6GAMES101/1647519390703.png" class="lazyload"></a></p>
+<p><a href="/2022/03/17/6GAMES101/1647519430159.png" data-fancybox="group" data-caption="1647519430159" class="fancybox"><img alt="1647519430159" title="1647519430159" data-src="/2022/03/17/6GAMES101/1647519430159.png" class="lazyload"></a></p>
+<ul>
+<li>先用双线性插值求出D层和D+1层的值，然后再用线性插值求出D+x层的值（x范围：0~1） </li>
+</ul>
+<p><a href="/2022/03/17/6GAMES101/1647519575177.png" data-fancybox="group" data-caption="1647519575177" class="fancybox"><img alt="1647519575177" title="1647519575177" data-src="/2022/03/17/6GAMES101/1647519575177.png" class="lazyload"></a></p>
+<ul>
+<li>开销：2次查询，1次插值，开销比较小</li>
+</ul>
+<h5 id="Limitations"><a href="#Limitations" class="headerlink" title="Limitations"></a>Limitations</h5><p><a href="/2022/03/17/6GAMES101/1647519916136.png" data-fancybox="group" data-caption="1647519916136" class="fancybox"><img alt="1647519916136" title="1647519916136" data-src="/2022/03/17/6GAMES101/1647519916136.png" class="lazyload"></a></p>
+<ul>
+<li><p>原因：mipmap是不够准确的，且默认是正方形覆盖范围的</p>
+<p><a href="/2022/03/17/6GAMES101/1647520083689.png" data-fancybox="group" data-caption="1647520083689" class="fancybox"><img alt="1647520083689" title="1647520083689" data-src="/2022/03/17/6GAMES101/1647520083689.png" class="lazyload"></a></p>
+</li>
+<li><p>能解决部分问题的办法：*<em>Anisotropic Filtering *</em>，各向异性过滤</p>
+<a href="/2022/03/17/6GAMES101/1647520178011.png" data-fancybox="group" data-caption="1647520178011" class="fancybox"><img alt="1647520178011" style="zoom:50%;" title="1647520178011" data-src="/2022/03/17/6GAMES101/1647520178011.png" class="lazyload"></a>
+
+<ol>
+<li><p>允许对长条形的区域做一个快速的范围查询</p>
+<p><a href="/2022/03/17/6GAMES101/1647520441430.png" data-fancybox="group" data-caption="1647520441430" class="fancybox"><img alt="1647520441430" title="1647520441430" data-src="/2022/03/17/6GAMES101/1647520441430.png" class="lazyload"></a></p>
+</li>
+<li><p>占用空间：1 -> 1+3=4</p>
+</li>
+<li><p>对于斜向的覆盖范围，效果也不是很好</p>
+</li>
+<li><p>各向异性生成的一系列纹理图也叫<strong>Ripmaps</strong></p>
+</li>
+<li><p>游戏中的各向异性过滤，只要显存足够就可以打开，和计算力无关，x 意味着开到多少层</p>
+</li>
+</ol>
+</li>
+<li><p><strong>EWA filtering</strong> </p>
+<p><a href="/2022/03/17/6GAMES101/1647520669212.png" data-fancybox="group" data-caption="1647520669212" class="fancybox"><img alt="1647520669212" title="1647520669212" data-src="/2022/03/17/6GAMES101/1647520669212.png" class="lazyload"></a></p>
+<p>任意不规则形状的覆盖范围可以拆分成很多不同的圆形覆盖</p>
+<p>代价是要进行多次查询</p>
+<p>（具体也不太懂）</p>
+</li>
+</ul>
+<h1 id="Applications-of-Texture"><a href="#Applications-of-Texture" class="headerlink" title="Applications of Texture"></a>Applications of Texture</h1><h2 id="Many-Uses"><a href="#Many-Uses" class="headerlink" title="Many Uses"></a>Many Uses</h2><p>In modern GPUS, texture = memory + range query (filering)</p>
+<p>可以把纹理理解成一块数据，可以对这块数据进行不同种类的查询（点查询/范围查询），而不用局限于图像上。</p>
+<p>从这个角度上出发，纹理可以表示好多好多东西</p>
+<h2 id="Environment-Map-环境光照"><a href="#Environment-Map-环境光照" class="headerlink" title="Environment Map 环境光照"></a>Environment Map 环境光照</h2><p>环境贴图/环境光照：记录下来任何方向的光（不区分直接光还是反射光，人眼环绕屋子一周看到的光记录下来）</p>
+<p><a href="/2022/03/17/6GAMES101/1647588043025.png" data-fancybox="group" data-caption="1647588043025" class="fancybox"><img alt="1647588043025" title="1647588043025" data-src="/2022/03/17/6GAMES101/1647588043025.png" class="lazyload"></a></p>
+<ul>
+<li><p>可以用纹理描述整个环境光长什么样，然后可以用这个环境光去渲染其他的物体，比点光源要好很多。</p>
+</li>
+<li><p>图形学上的经典的、广泛应用的模型之一：犹他茶壶</p>
+</li>
+<li><p>假设：认为光源来自无限远，没有实际的深度意义。环境贴图只记录光源的方向信息（不记录光源的位置信息）（ 否则即使同一个墙的同一个点，在不同位置看上去，光的方向就会发生变化）</p>
+</li>
+</ul>
+<h3 id="Spherical-Environment-Map"><a href="#Spherical-Environment-Map" class="headerlink" title="Spherical Environment Map"></a>Spherical Environment Map</h3><p>把环境光记录在球面上，然后展开</p>
+<p><a href="/2022/03/17/6GAMES101/1647589531432.png" data-fancybox="group" data-caption="1647589531432" class="fancybox"><img alt="1647589531432" title="1647589531432" data-src="/2022/03/17/6GAMES101/1647589531432.png" class="lazyload"></a></p>
+<h4 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h4><p>头部和底部向中间扭曲</p>
+<p><a href="/2022/03/17/6GAMES101/1647589588664.png" data-fancybox="group" data-caption="1647589588664" class="fancybox"><img alt="1647589588664" title="1647589588664" data-src="/2022/03/17/6GAMES101/1647589588664.png" class="lazyload"></a></p>
+<p>不能均匀描述球上不同位置，靠近极点的地方（比较窄）会出现扭曲现象。</p>
+<h4 id="Solution-Cube-Map"><a href="#Solution-Cube-Map" class="headerlink" title="Solution: Cube Map"></a>Solution: Cube Map</h4><p><a href="/2022/03/17/6GAMES101/1647589802292.png" data-fancybox="group" data-caption="1647589802292" class="fancybox"><img alt="1647589802292" title="1647589802292" data-src="/2022/03/17/6GAMES101/1647589802292.png" class="lazyload"></a></p>
+<ul>
+<li><p>球外边增加一个包围盒，将光照信息存在立方体的表面上</p>
+</li>
+<li><p>立方体个个面均匀，很少有扭曲的现象发生</p>
+</li>
+</ul>
+<p><a href="/2022/03/17/6GAMES101/1647589826609.png" data-fancybox="group" data-caption="1647589826609" class="fancybox"><img alt="1647589826609" title="1647589826609" data-src="/2022/03/17/6GAMES101/1647589826609.png" class="lazyload"></a></p>
+<ul>
+<li>想看来自于某一个方向的光照是多少，球上可以很容易的求出来，现在需要先判断这个方向被记在了立方体的哪一个面上，需要额外的计算（但是非常快）</li>
+<li>这两种描述环境光的方式，本质都是一样的——都是为了描述来自不同方向的光照信息（不管是直射的光，还是反射的光）</li>
+</ul>
+<h2 id="Bump-normal-mapping-凹凸贴图-法线贴图"><a href="#Bump-normal-mapping-凹凸贴图-法线贴图" class="headerlink" title="Bump / normal mapping 凹凸贴图/法线贴图"></a>Bump / normal mapping 凹凸贴图/法线贴图</h2><h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
+<li><p>纹理可以定义任何不同位置的任何不同属性，所以，纹理也可以定义表面上任意一个点的相对高度（相对基础表面沿着法线方向往上往下各走多少）是多少</p>
+</li>
+<li><p>Adding surface detail without adding more triangles</p>
+<p>在不把几何形体变复杂的情况下，可以通过应用复杂的纹理，从而定义任何一点的相对高度</p>
+<p><a href="/2022/03/17/6GAMES101/1648121337885.png" data-fancybox="group" data-caption="1648121337885" class="fancybox"><img alt="1648121337885" title="1648121337885" data-src="/2022/03/17/6GAMES101/1648121337885.png" class="lazyload"></a></p>
+<p>相对高度变化 -> 法线发生变化 -> shading的结果发生变化（着色产生明暗对比）</p>
+<p><a href="/2022/03/17/6GAMES101/1648121145489.png" data-fancybox="group" data-caption="1648121145489" class="fancybox"><img alt="1648121145489" title="1648121145489" data-src="/2022/03/17/6GAMES101/1648121145489.png" class="lazyload"></a>通过纹理映射，人为的做一个假的法线，用假的着色结果欺骗人的眼睛，让人觉得有凹凸的效果</p>
+</li>
+</ul>
+<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a>具体操作</h3><ul>
+<li><p>Perturb surface normal per pixel</p>
+<p>(for shading computations only)</p>
+<p>法线扰动</p>
+</li>
+<li><p>How to modify normal vector?</p>
+<p><a href="/2022/03/17/6GAMES101/1648121980894.png" data-fancybox="group" data-caption="1648121980894" class="fancybox"><img alt="1648121980894" title="1648121980894" data-src="/2022/03/17/6GAMES101/1648121980894.png" class="lazyload"></a></p>
+</li>
+</ul>
+<h4 id="How-to-perturb-the-normal-in-flatland"><a href="#How-to-perturb-the-normal-in-flatland" class="headerlink" title="How to perturb the normal (in flatland)"></a>How to perturb the normal (in flatland)</h4><ul>
+<li><p>Original surface normal n(p) = (0, 1)</p>
+</li>
+<li><p>Derivative at p is dp = c * [h(p+1) - h(p)]</p>
+<p>导数的定义：水平方向移动一个距离，竖直方向移动多少</p>
+<p>切点处的导数等于切线斜率，得到切线</p>
+<p>c 用来定义凹凸贴图的影响大不大</p>
+</li>
+<li><p>Perturbed normal is then n(p) = (-dp, 1).normalized() </p>
+<p>切线向量 (1, dp) </p>
+<p>把切线逆时针旋转90度，得到法线向量 (-dp, 1)</p>
+<p>normalized 归一化</p>
+</li>
+</ul>
+<p><a href="/2022/03/17/6GAMES101/1648122073124.png" data-fancybox="group" data-caption="1648122073124" class="fancybox"><img alt="1648122073124" title="1648122073124" data-src="/2022/03/17/6GAMES101/1648122073124.png" class="lazyload"></a></p>
+<h4 id="How-to-perturb-the-normal-in-3D"><a href="#How-to-perturb-the-normal-in-3D" class="headerlink" title="How to perturb the normal (in 3D)"></a>How to perturb the normal (in 3D)</h4><ul>
+<li><p>Original surface normal n(p) = (0, 0, 1) </p>
+</li>
+<li><p>Derivatives at p are</p>
+<ul>
+<li>dp/du = c1 * [h(u+1) - h(u)] </li>
+<li>dp/dv = c2 * [h(v+1) - h(v)]</li>
+</ul>
+</li>
+<li><p>Perturbed normal is n = (-dp/du, -dp/dv, 1).normalized()</p>
+</li>
+<li><p>Note that this is in local coordinate! </p>
+<p>假设原来的法线方向是 (0, 0, 1) ，所以要用局部坐标系来计算扰动后的法线方向，然后再重新计算回世界坐标里</p>
+<p>More will be elaborated in FAQ of HW3 </p>
+</li>
+</ul>
+<h3 id="Displacement-mapping-位移贴图"><a href="#Displacement-mapping-位移贴图" class="headerlink" title="Displacement mapping 位移贴图"></a>Displacement mapping 位移贴图</h3><ul>
+<li>凹凸贴图的缺点：<ol>
+<li>边缘处会露馅（还是原来的模型形状）</li>
+<li>复杂的模型，自己突起的部分会有阴影投影到自己身上，这点凹凸贴图也无法体现</li>
+</ol>
+</li>
+</ul>
+<p><a href="/2022/03/17/6GAMES101/1648123281624.png" data-fancybox="group" data-caption="1648123281624" class="fancybox"><img alt="1648123281624" title="1648123281624" data-src="/2022/03/17/6GAMES101/1648123281624.png" class="lazyload"></a></p>
+<ul>
+<li>a more advanced approach <ul>
+<li>Uses the same texture as in bumping mapping </li>
+<li>Actually moves the vertices </li>
+<li>要求模型原本的三角形足够细，跟得上定义的纹理的变化速度<ul>
+<li>DirectX 可以根据需要对三角形进行细分</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Other-applications"><a href="#Other-applications" class="headerlink" title="Other applications"></a>Other applications</h2><h3 id="3D-Procedural-Noise-Solid-modeling"><a href="#3D-Procedural-Noise-Solid-modeling" class="headerlink" title="3D Procedural Noise + Solid modeling"></a>3D Procedural Noise + Solid modeling</h3><ul>
+<li><p>实际上是定义了空间中任何一点的值</p>
+</li>
+<li><p>定义了三维空间中的噪声函数，经过一系列操作后，变成需要的样子</p>
+</li>
+<li><p>广泛应用的 Perlin noise，用于生成山脉等</p>
+<p><a href="/2022/03/17/6GAMES101/1648123885417.png" data-fancybox="group" data-caption="1648123885417" class="fancybox"><img alt="1648123885417" title="1648123885417" data-src="/2022/03/17/6GAMES101/1648123885417.png" class="lazyload"></a></p>
+</li>
+</ul>
+<h3 id="Provide-Precomputed-Shading"><a href="#Provide-Precomputed-Shading" class="headerlink" title="Provide Precomputed Shading"></a>Provide Precomputed Shading</h3><p>纹理可以用来记录之前已经计算好的信息</p>
+<ul>
+<li><p>眉骨对眼框的投影的计算和渲染：环境光遮蔽</p>
+<p><a href="/2022/03/17/6GAMES101/1648124127653.png" data-fancybox="group" data-caption="1648124127653" class="fancybox"><img alt="1648124127653" title="1648124127653" data-src="/2022/03/17/6GAMES101/1648124127653.png" class="lazyload"></a></p>
+</li>
+</ul>
+<h4 id="3D-Textures-and-Volume-Rendering"><a href="#3D-Textures-and-Volume-Rendering" class="headerlink" title="3D Textures and Volume Rendering"></a>3D Textures and Volume Rendering</h4><p>三维纹理记录三维的各种信息，用于体积渲染</p>
+<p>比如医学上的核磁共振得到三维的密度信息等</p>
+<p><a href="/2022/03/17/6GAMES101/1648124322982.png" data-fancybox="group" data-caption="1648124322982" class="fancybox"><img alt="1648124322982" title="1648124322982" data-src="/2022/03/17/6GAMES101/1648124322982.png" class="lazyload"></a></p>
+</body></html></div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Crux</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="http://cruxssssss.github.io/2022/03/17/6GAMES101/">http://cruxssssss.github.io/2022/03/17/6GAMES101/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/">图形学    </a><a class="post-meta__tags" href="/tags/%E5%85%A5%E9%97%A8/">入门    </a></div><div class="post_share"><div class="social-share" data-image="/img/26.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> Donate<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2022/03/16/5GAMES101/"><img class="next_cover lazyload" data-src="/img/25.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="label">Next Post</div><div class="next_info"><span>从5开始的图形学入门生活（Blinn-Phong reflectance model &amp; Shading Frequencies &amp; Graphics Pipeline）</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> Recommend</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2022/02/24/0GAMES101/" title="从0开始的图形学入门生活（Overview & Algebra & Transform）"><img class="relatedPosts_cover lazyload"data-src="/img/17.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-02-24</div><div class="relatedPosts_title">从0开始的图形学入门生活（Overview & Algebra & Transform）</div></div></a></div><div class="relatedPosts_item"><a href="/2022/02/28/2GAMES101/" title="从2开始的图形学入门生活（Rasterization(Triangles) & 作业1）"><img class="relatedPosts_cover lazyload"data-src="/img/20.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-02-28</div><div class="relatedPosts_title">从2开始的图形学入门生活（Rasterization(Triangles) & 作业1）</div></div></a></div><div class="relatedPosts_item"><a href="/2022/03/01/3GAMES101/" title="从3开始的图形学入门生活（Rasterization-Antialiasing）"><img class="relatedPosts_cover lazyload"data-src="/img/21.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-03-01</div><div class="relatedPosts_title">从3开始的图形学入门生活（Rasterization-Antialiasing）</div></div></a></div><div class="relatedPosts_item"><a href="/2022/03/09/4GAMES101/" title="从4开始的图形学入门生活（Z-buffer & Lambertian (Diffuse) Shading）"><img class="relatedPosts_cover lazyload"data-src="/img/22.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-03-09</div><div class="relatedPosts_title">从4开始的图形学入门生活（Z-buffer & Lambertian (Diffuse) Shading）</div></div></a></div><div class="relatedPosts_item"><a href="/2022/03/13/4GAMES101-2/" title="GAMES101 - Assignment2"><img class="relatedPosts_cover lazyload"data-src="/img/23.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-03-13</div><div class="relatedPosts_title">GAMES101 - Assignment2</div></div></a></div><div class="relatedPosts_item"><a href="/2022/03/16/5GAMES101/" title="从5开始的图形学入门生活（Blinn-Phong reflectance model & Shading Frequencies & Graphics Pipeline）"><img class="relatedPosts_cover lazyload"data-src="/img/25.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2022-03-16</div><div class="relatedPosts_title">从5开始的图形学入门生活（Blinn-Phong reflectance model & Shading Frequencies & Graphics Pipeline）</div></div></a></div></div><div class="clear_both"></div></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By Crux</div><div class="framework-info"><span>Driven </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Hi, welcome to my blog!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="Read Mode"></i><i class="fa fa-plus" id="font_plus" title="Increase font size"></i><i class="fa fa-minus" id="font_minus" title="Decrease font size"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="Traditional Chinese and Simplified Chinese Conversion" target="_self">简</a><i class="darkmode fa fa-moon-o" id="darkmode" title="Dark Mode"></i></div><div id="rightside-config-show"><div id="rightside_config" title="Setting"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="Table of Contents" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="Back to top" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script id="ribbon_piao" mobile="false" src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
